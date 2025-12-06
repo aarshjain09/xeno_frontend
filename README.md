@@ -1,70 +1,215 @@
-# Getting Started with Create React App
+# 🚀 Shopify Multi-Tenant Data Sync & Analytics Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A multi-tenant platform for syncing **Shopify Products, Orders, and Customers** and visualizing analytics through a React dashboard.
 
-## Available Scripts
+This project demonstrates real-world engineering concepts such as multi-tenancy, scheduled data sync, Shopify API integration, clean ORM design, and production-grade deployment.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 📌 Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### **Backend**
+- Node.js + Express.js  
+- Sequelize ORM  
+- MySQL (Multi-tenant schema)  
+- node-cron (automated sync jobs)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### **Frontend**
+- React (Vercel deployment)  
+- Recharts (analytics visualization)  
+- Axios (API communication)
 
-### `npm test`
+### **Integration**
+- Shopify Admin REST API  
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### **Deployment**
+- Backend → Render  
+- Frontend → Vercel  
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🌐 Features
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 🔐 **Multi-Tenant Architecture**
+- Each tenant stores Shopify credentials (store URL + access token)
+- All synced data contains a `tenantId` for isolation  
+- Clean relational schema using Sequelize models  
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+### 🔄 **Automated Shopify Data Sync**
+Supports syncing:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- Products  
+- Orders  
+- Customers  
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Sync methods:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **Manual Sync** → `/api/sync/run/:tenantId`  
+- **Automatic Sync** → via `node-cron`  
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+### 📊 **Analytics Dashboard**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Frontend dashboard includes:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Total Revenue  
+- Total Orders  
+- Orders per Day Chart  
+- Top Selling Products  
+- Customer Growth Metrics  
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🏗 High-Level Architecture Diagram (PlantUML)
 
-### Analyzing the Bundle Size
+<img width="998" height="964" alt="xeno_architecture" src="https://github.com/user-attachments/assets/c3acd6c7-a0cf-470d-9b4b-45ae1d63ff55" />
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### Making a Progressive Web App
+## 📂 Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```
+/backend
+  /src
+    /config/db.js
+    /models/*.js
+    /routes/tenants.js
+    /routes/sync.js
+    /routes/analytics.js
+    /services/shopifySync.js
+    index.js
+    cron.js
 
-### Advanced Configuration
+/frontend
+  /src
+    /components
+    /pages
+    /services/api.js
+    /styles
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## 🗄 Database Schema
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### **tenants**
+| field | type |
+|-------|------|
+| id | UUID |
+| storeUrl | string |
+| accessToken | string |
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### **products**
+| field | type |
+|-------|------|
+| id | int |
+| tenantId | FK |
+| shopifyProductId | varchar |
+| title | varchar |
+| price | decimal |
+| inventory | int |
+
+---
+
+### **orders**
+| field | type |
+|-------|------|
+| id | int |
+| tenantId | FK |
+| shopifyOrderId | varchar |
+| totalPrice | decimal |
+| currency | varchar |
+| createdAt | datetime |
+
+---
+
+### **customers**
+| field | type |
+|-------|------|
+| id | int |
+| tenantId | FK |
+| shopifyCustomerId | varchar |
+| name | varchar |
+| email | varchar |
+
+---
+
+## 🔗 API Endpoints
+
+### **Tenant APIs**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/tenants/register` | Register a tenant |
+| GET  | `/api/tenants` | List tenants (debug) |
+
+---
+
+### **Sync APIs**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/sync/run/:tenantId` | Manually trigger sync |
+| GET  | `/api/sync/status/:tenantId` | Get last sync timestamp |
+
+---
+
+### **Analytics APIs**
+| Method | Endpoint |
+|--------|----------|
+| GET | `/api/analytics/orders/:tenantId` |
+| GET | `/api/analytics/revenue/:tenantId` |
+| GET | `/api/analytics/products/:tenantId` |
+| GET | `/api/analytics/customers/:tenantId` |
+
+---
+
+## 🚀 Local Development
+
+### **Backend Setup**
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+---
+
+### **Frontend Setup**
+```bash
+cd frontend
+npm install
+npm start
+```
+
+---
+
+## 🌐 Deployment
+
+### **Backend (Render)**
+- Add environment variables:
+  - `DB_HOST`
+  - `DB_USER`
+  - `DB_PASSWORD`
+  - `DB_NAME`
+  - `PORT`
+- Build: `npm install`
+- Start: `npm start`
+
+---
+
+### **Frontend (Vercel)**
+- Deploy via GitHub integration  
+
+---
+
+## ⚠️ Known Limitations
+
+- Shopify OAuth app installation not implemented  
+- No real-time webhooks (using cron instead)  
+- Basic token auth (not full session management)  
+
+---
+
