@@ -1,13 +1,367 @@
-body {
+/* ============ Global Reset ============ */
+
+* {
+  box-sizing: border-box;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+/* ============ App Layout ============ */
+
+.app-root {
+  min-height: 100vh;
+  padding: 24px 16px 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Center content and limit width */
+.app-header,
+.app-main {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ============ Header ============ */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.app-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.header-right {
+  display: flex;
+  gap: 8px;
+}
+
+/* ============ Buttons ============ */
+
+.btn-secondary {
+  font-size: 13px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, box-shadow 0.15s ease,
+    transform 0.08s ease;
+}
+
+.btn-secondary:hover {
+  background: #f3f4ff;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* ============ Messages ============ */
+
+.messages {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.msg {
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.msg-success {
+  background: #ecfdf3;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.msg-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+/* ============ Main Layout ============ */
+
+.app-main {
+  flex: 1;
+}
+
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ============ Summary Cards ============ */
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.summary-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.summary-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.summary-value {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* ============ Charts & Cards ============ */
+
+.charts-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+}
+
+.chart-card {
+  padding: 14px 18px 18px;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.card-note {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Recharts container is already using ResponsiveContainer,
+   we just give the parent some breathing room */
+.chart-card .recharts-responsive-container {
+  margin-top: 4px;
+}
+
+/* ============ Top Customers Table ============ */
+
+.simple-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.simple-table thead {
+  background: #f9fafb;
+}
+
+.simple-table th,
+.simple-table td {
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.simple-table th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.simple-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+/* ============ Responsive ============ */
+
+@media (max-width: 768px) {
+  .app-root {
+    padding-inline: 12px;
+  }
+
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-right {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* ===================== Auth / Login Page ===================== */
+
+/* Center the auth card in the page */
+.app-main.single-column {
+  max-width: 420px;
+  margin: 40px auto 0;
+}
+
+/* Auth card reusing .card base styles */
+.auth-card {
+  padding: 22px 22px 26px;
+}
+
+/* Tabs: Login / Sign Up */
+.card-header {
+  display: flex;
+  border-radius: 999px;
+  background: #f3f4f6;
+  padding: 3px;
+  margin-bottom: 14px;
+}
+
+.tab-button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  border-radius: 999px;
+  font-size: 13px;
+  padding: 8px 10px;
+  cursor: pointer;
+  color: #6b7280;
+  font-weight: 500;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tab-button.active {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
+/* Form content inside the card */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+/* Form fields */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-group input {
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  padding: 8px 10px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background 0.15s ease;
+  background: #f9fafb;
+}
+
+.form-group input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.35);
+  background: #ffffff;
+}
+
+.help-text {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+/* Primary submit button */
+.btn-primary {
+  margin-top: 8px;
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 9px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #2563eb;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease,
+    transform 0.08s ease;
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Small screens */
+@media (max-width: 640px) {
+  .app-main.single-column {
+    margin-top: 24px;
+    padding-inline: 4px;
+  }
 }
